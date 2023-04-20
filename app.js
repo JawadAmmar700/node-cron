@@ -11,8 +11,15 @@ app.get("/", (req, res) => {
   res.send("Hey there!, this is a server that is used by the senior project");
 });
 
-cron.schedule("* * * * * *", () => {
-  console.log("I'm running every minute");
-});
+app.post("/todos", (req, res) => {
+  // Code to create the post todo goes here...
 
+  // Define a cron job to run at a specific time
+
+  cron.schedule("* * * * * *", () => {
+    console.log("I'm running every minute");
+  });
+  // Send the response back to the client
+  res.json({ message: "Post todo created successfully!" });
+});
 app.listen(4000);
