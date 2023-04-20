@@ -1,9 +1,14 @@
-const cron = require("node-cron");
+const express = require("express");
+const app = express();
+const cors = require("cors");
+const bodyParser = require("body-parser");
+require("./monitor");
 
-function start() {
-  cron.schedule("* * * * * *", () => {
-    console.log("I'm running every minute");
-  });
-}
+app.use(bodyParser.json());
+app.use(cors({ origin: "*", optionsSuccessStatus: 200 }));
 
-start();
+app.get("/", (req, res) => {
+  res.send("Hey there!, this is a server that is used by the senior project");
+});
+
+app.listen(4000);
