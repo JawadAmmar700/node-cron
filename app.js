@@ -2,7 +2,8 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const cron = require("node-cron");
+// const cron = require("node-cron");
+const schedule = require("node-schedule");
 
 app.use(bodyParser.json());
 app.use(cors({ origin: "*", optionsSuccessStatus: 200 }));
@@ -16,7 +17,7 @@ app.post("/todos", (req, res) => {
 
   // Define a cron job to run at a specific time
 
-  cron.schedule("* * * * * *", () => {
+  schedule.scheduleJob("* * * * * *", () => {
     console.log("I'm running every minute");
   });
   // Send the response back to the client
