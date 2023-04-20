@@ -3,6 +3,7 @@ const app = express();
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const cron = require("node-cron");
+const { createCronJob, createCronJobToMarkAsDone } = require("./lib/cron-job");
 
 // require("./monitor");
 
@@ -14,9 +15,11 @@ app.get("/", (req, res) => {
 });
 
 app.post("/", (req, res) => {
-  cron.schedule("*/3 * * * * *", () => {
-    console.log("I'm running every 3 s");
-  });
+  const todo = req.body;
+  console.log("todo", todo);
+  createCronJob(todo);
+  // createCronJobToMarkAsDone(todo);
+
   res.json({ message: "I'm running every 3 s" });
 });
 
