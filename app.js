@@ -9,7 +9,6 @@ const {
   get_job_crons,
   remove_job_crons,
 } = require("./lib/store");
-const { transporter } = require("./lib/nodemailer");
 
 app.use(bodyParser.json());
 app.use(cors({ origin: process.env.CLIENT_APP, optionsSuccessStatus: 200 }));
