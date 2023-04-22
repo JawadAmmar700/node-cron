@@ -25,7 +25,7 @@ app.post("/", (req, res) => {
   res.json({ message: "Cron is created succussfully" });
 });
 
-app.post("/reminder-update", (req, res) => {
+app.put("/reminder-update", (req, res) => {
   const { todo } = req.body;
   const job = get_job_crons(todo.id);
   job.scheduledJob.stop();
