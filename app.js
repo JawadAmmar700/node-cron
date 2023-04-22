@@ -40,4 +40,14 @@ app.post("/reminder-update", (req, res) => {
   res.json({ message: "Cron is updated succussfully" });
 });
 
+app.delete("/reminder-deleted", (req, res) => {
+  const { todoId } = req.body;
+  const job = get_job_crons(todoId);
+  job.scheduledJob.stop();
+  job.jobToMarkAsDone.stop();
+  remove_job_crons(todoId);
+
+  res.json({ message: "Cron is deleted succussfully" });
+});
+
 app.listen(5000);
