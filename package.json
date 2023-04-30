@@ -5,9 +5,14 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc",
-    "dev": "nodemon src/index.ts",
-    "start": "nodemon dist/index.js"
+    "start": "nodemon src/index.js",
+    "dev": "nodemon src/index.ts"
   },
+  "pre-commit": [
+    "ts.check",
+    "build",
+    "add-build"
+  ],
   "dependencies": {
     "@prisma/client": "^4.13.0",
     "@types/cors": "^2.8.13",
