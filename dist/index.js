@@ -23,7 +23,7 @@ app.post("/", (req, res) => {
     (0, store_1.add_job_crons)(todo.id, scheduledJob, jobToMarkAsDone);
     res.json({ message: "Cron is created succussfully" });
 });
-app.post("/reminder-update", (req, res) => {
+app.put("/reminder-update", (req, res) => {
     const { todo } = req.body;
     const job = (0, store_1.get_job_crons)(todo.id);
     job.scheduledJob.stop();
@@ -34,4 +34,13 @@ app.post("/reminder-update", (req, res) => {
     (0, store_1.add_job_crons)(todo.id, scheduledJob, jobToMarkAsDone);
     res.json({ message: "Cron is updated succussfully" });
 });
+app.delete("/reminder-deleted", (req, res) => {
+    const { todoId } = req.body;
+    const job = (0, store_1.get_job_crons)(todoId);
+    job.scheduledJob.stop();
+    job.jobToMarkAsDone.stop();
+    (0, store_1.remove_job_crons)(todoId);
+    res.json({ message: "Cron is deleted succussfully" });
+});
 app.listen(5000);
+//# sourceMappingURL=index.js.map
