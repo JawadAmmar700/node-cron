@@ -4,6 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
+    "vercel-build": "tsc && prisma generate && node dist/index.js",
     "build": "tsc",
     "start": "nodemon src/index.js",
     "dev": "nodemon src/index.ts"
