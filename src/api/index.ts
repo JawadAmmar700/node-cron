@@ -3,8 +3,8 @@ dotenv.config();
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
-import { createCronJob, createCronJobToMarkAsDone } from "./lib/cron-job";
-import { add_job_crons, get_job_crons, remove_job_crons } from "./lib/store";
+import { createCronJob, createCronJobToMarkAsDone } from "../lib/cron-job";
+import { add_job_crons, get_job_crons, remove_job_crons } from "../lib/store";
 const app = express();
 
 app.use(bodyParser.json());

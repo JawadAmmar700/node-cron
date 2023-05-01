@@ -1,12 +1,12 @@
 {
   "name": "cron",
   "version": "1.0.0",
-  "main": "src/index.ts",
+  "main": "src/api/index.ts",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon dist/index.js",
     "build": "tsc",
-    "dev": "nodemon src/index.ts"
+    "start": "nodemon dist/api/index.js",
+    "dev": "nodemon src/api/index.ts"
   },
   "dependencies": {
     "@prisma/client": "^4.13.0",
