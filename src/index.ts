@@ -40,7 +40,8 @@ app.put("/reminder-update", (req, res) => {
 });
 
 app.delete("/reminder-deleted", (req, res) => {
-  const { todoId } = req.body;
+  // const { todoId } = req.body;
+  const { todoId } = req.query as { todoId: string };
   const job = get_job_crons(todoId);
   job.scheduledJob.stop();
   job.jobToMarkAsDone.stop();
