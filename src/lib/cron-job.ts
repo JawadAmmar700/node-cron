@@ -46,7 +46,6 @@ type TODO = Reminder & { user: { email: string; name: string } };
 
 const createCronJob = (todo: TODO) => {
   const cronSchedule = createSchedule(todo.date, todo.unix, 600000);
-  console.log(cronSchedule);
 
   const scheduledJob = cron.schedule(
     cronSchedule,
@@ -76,7 +75,6 @@ const createCronJob = (todo: TODO) => {
 
 const createCronJobToMarkAsDone = (todo: Reminder) => {
   const cronSchedule = createSchedule(todo.date, todo.unix);
-  console.log(cronSchedule);
 
   const jobToMarkAsDone = cron.schedule(
     cronSchedule,

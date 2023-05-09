@@ -53,7 +53,6 @@ const createSchedule = (dateString, time, offset = 0) => {
 };
 const createCronJob = (todo) => {
     const cronSchedule = createSchedule(todo.date, todo.unix, 600000);
-    console.log(cronSchedule);
     const scheduledJob = node_cron_1.default.schedule(cronSchedule, () => __awaiter(void 0, void 0, void 0, function* () {
         yield client.reminder.update({
             where: {
@@ -78,7 +77,6 @@ const createCronJob = (todo) => {
 exports.createCronJob = createCronJob;
 const createCronJobToMarkAsDone = (todo) => {
     const cronSchedule = createSchedule(todo.date, todo.unix);
-    console.log(cronSchedule);
     const jobToMarkAsDone = node_cron_1.default.schedule(cronSchedule, () => __awaiter(void 0, void 0, void 0, function* () {
         (0, store_1.remove_job_crons)(todo.id);
         yield client.reminder.update({
