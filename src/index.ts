@@ -41,8 +41,8 @@ app.put("/reminder-update", (req, res) => {
 });
 
 app.delete("/reminder-deleted", (req, res) => {
-  // const { todoId } = req.body;
-  const { todoId } = req.query as { todoId: string };
+  const { todoId } = req.body;
+  // const { todoId } = req.query as { todoId: string };
   const job = get_job_crons(todoId);
   if (!job) return res.json({ message: "There is no cron job" });
   job.scheduledJob.stop();
