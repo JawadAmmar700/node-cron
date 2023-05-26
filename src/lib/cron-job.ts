@@ -62,7 +62,7 @@ const createCronJob = (todo: TODO) => {
         from: `${process.env.MY_EMAIL}`,
         to: todo.user.email,
         subject: `Reminder: [${todo.title}]`,
-        text: `Message: \n Hello, \n\n This is a friendly reminder that you have a task to complete: [${todo.title}]. Please complete this task as soon as possible. \n\n Thank you, \n\n meetly-omega.vercel.app`,
+        html: `Message: \n Hello, \n\n This is a friendly reminder that you have a task to complete: [${todo.title}]. Please complete this task as soon as possible. \n\n Thank you, \n\n meetly-omega.vercel.app`,
       };
       await transporter.sendMail(mailOptions);
     },
