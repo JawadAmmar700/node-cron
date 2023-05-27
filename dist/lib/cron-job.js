@@ -16,6 +16,7 @@ exports.createCronJobToMarkAsDone = exports.createCronJob = void 0;
 const node_cron_1 = __importDefault(require("node-cron"));
 const client_1 = require("@prisma/client");
 const store_1 = require("./store");
+const nodemailer_1 = require("./nodemailer");
 const client = new client_1.PrismaClient();
 const createScheduleExpression = (date) => {
     const minutes = date.getMinutes();
@@ -61,18 +62,20 @@ const createCronJob = (todo) => {
                 notificationSent: true,
             },
         });
-        try {
-            yield fetch(process.env.SENIOR_NODEMAILER, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ to: todo.user.email, title: todo.title }),
-            });
-        }
-        catch (error) {
-            console.log(error);
-        }
+        const mailOptions = {
+            from: process.env.MY_EMAIL,
+            to: todo.user.email,
+            subject: `Reminder: ${todo.title}`,
+            text: `Message: \n Hello, This is a friendly reminder that you have a task to complete: [${todo.title}]. Please complete this task as soon as possible. \n\n Thank you, \n\n meetly-omega.vercel.app`,
+        };
+        yield nodemailer_1.transporter.sendMail(mailOptions, (err, info) => {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                console.log("Email sent: " + info.response);
+            }
+        });
     }), {
         timezone: "Europe/Istanbul",
     });
