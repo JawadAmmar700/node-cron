@@ -1,5 +1,4 @@
 import cron from "node-cron";
-import { transporter } from "./nodemailer";
 import { PrismaClient, type Reminder } from "@prisma/client";
 import { remove_job_crons } from "./store";
 const client = new PrismaClient();
@@ -58,13 +57,17 @@ const createCronJob = (todo: TODO) => {
           notificationSent: true,
         },
       });
-      const mailOptions = {
-        from: `${process.env.MY_EMAIL}`,
-        to: todo.user.email,
-        subject: `Reminder: [${todo.title}]`,
-        html: `Message: \n Hello, \n\n This is a friendly reminder that you have a task to complete: [${todo.title}]. Please complete this task as soon as possible. \n\n Thank you, \n\n meetly-omega.vercel.app`,
-      };
-      await transporter.sendMail(mailOptions);
+      try {
+        await fetch(process.env.SENIOR_NODEMAILER, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ to: todo.user.email, title: todo.title }),
+        });
+      } catch (error) {
+        console.log(error);
+      }
     },
     {
       timezone: "Europe/Istanbul",
