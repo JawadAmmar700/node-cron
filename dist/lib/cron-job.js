@@ -16,7 +16,7 @@ exports.createCronJobToMarkAsDone = exports.createCronJob = void 0;
 const node_cron_1 = __importDefault(require("node-cron"));
 const client_1 = require("@prisma/client");
 const store_1 = require("./store");
-const nodemailer_1 = require("./nodemailer");
+const courier_1 = require("./courier");
 const client = new client_1.PrismaClient();
 const createScheduleExpression = (date) => {
     const minutes = date.getMinutes();
@@ -53,6 +53,7 @@ const createSchedule = (dateString, time, offset = 0) => {
 };
 const createCronJob = (todo) => {
     const cronSchedule = createSchedule(todo.date, todo.unix, 600000);
+    console.log(cronSchedule);
     const scheduledJob = node_cron_1.default.schedule(cronSchedule, () => __awaiter(void 0, void 0, void 0, function* () {
         yield client.reminder.update({
             where: {
@@ -62,19 +63,17 @@ const createCronJob = (todo) => {
                 notificationSent: true,
             },
         });
-        const mailOptions = {
-            from: process.env.MY_EMAIL,
-            to: todo.user.email,
-            subject: `Reminder: ${todo.title}`,
-            text: `Message: \n Hello, This is a friendly reminder that you have a task to complete: [${todo.title}]. Please complete this task as soon as possible. \n\n Thank you, \n\n meetly-omega.vercel.app`,
-        };
-        yield nodemailer_1.transporter.sendMail(mailOptions, (err, info) => {
-            if (err) {
-                console.log(err);
-            }
-            else {
-                console.log("Email sent: " + info.response);
-            }
+        yield courier_1.courier.send({
+            message: {
+                to: {
+                    email: todo.user.email,
+                },
+                template: "2D62H8J32V4YWWG1SC4DE07ABJ6H",
+                data: {
+                    recipientName: todo.user.name,
+                    todoTitle: todo.title,
+                },
+            },
         });
     }), {
         timezone: "Europe/Istanbul",
@@ -84,6 +83,7 @@ const createCronJob = (todo) => {
 exports.createCronJob = createCronJob;
 const createCronJobToMarkAsDone = (todo) => {
     const cronSchedule = createSchedule(todo.date, todo.unix);
+    console.log(cronSchedule);
     const jobToMarkAsDone = node_cron_1.default.schedule(cronSchedule, () => __awaiter(void 0, void 0, void 0, function* () {
         (0, store_1.remove_job_crons)(todo.id);
         yield client.reminder.update({

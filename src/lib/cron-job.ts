@@ -1,7 +1,7 @@
 import cron from "node-cron";
 import { PrismaClient, type Reminder } from "@prisma/client";
 import { remove_job_crons } from "./store";
-import { transporter } from "./nodemailer";
+import { courier } from "./courier";
 const client = new PrismaClient();
 
 const createScheduleExpression = (date: Date) => {
@@ -46,6 +46,7 @@ type TODO = Reminder & { user: { email: string; name: string } };
 
 const createCronJob = (todo: TODO) => {
   const cronSchedule = createSchedule(todo.date, todo.unix, 600000);
+  console.log(cronSchedule);
 
   const scheduledJob = cron.schedule(
     cronSchedule,
@@ -58,19 +59,17 @@ const createCronJob = (todo: TODO) => {
           notificationSent: true,
         },
       });
-      const mailOptions = {
-        from: process.env.MY_EMAIL,
-        to: todo.user.email,
-        subject: `Reminder: ${todo.title}`,
-        text: `Message: \n Hello, This is a friendly reminder that you have a task to complete: [${todo.title}]. Please complete this task as soon as possible. \n\n Thank you, \n\n meetly-omega.vercel.app`,
-      };
-
-      await transporter.sendMail(mailOptions, (err: any, info: any) => {
-        if (err) {
-          console.log(err);
-        } else {
-          console.log("Email sent: " + info.response);
-        }
+      await courier.send({
+        message: {
+          to: {
+            email: todo.user.email,
+          },
+          template: "2D62H8J32V4YWWG1SC4DE07ABJ6H",
+          data: {
+            recipientName: todo.user.name,
+            todoTitle: todo.title,
+          },
+        },
       });
     },
     {
@@ -82,6 +81,7 @@ const createCronJob = (todo: TODO) => {
 
 const createCronJobToMarkAsDone = (todo: Reminder) => {
   const cronSchedule = createSchedule(todo.date, todo.unix);
+  console.log(cronSchedule);
 
   const jobToMarkAsDone = cron.schedule(
     cronSchedule,

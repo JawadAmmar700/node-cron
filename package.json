@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@prisma/client": "^4.13.0",
+    "@trycourier/courier": "^4.2.0",
     "@types/cors": "^2.8.13",
     "@types/node-cron": "^3.0.7",
     "body-parser": "^1.20.2",
