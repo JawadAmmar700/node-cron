@@ -26,6 +26,8 @@ app.post("/", (req, res) => {
 app.put("/reminder-update", (req, res) => {
     const { todo } = req.body;
     const job = (0, store_1.get_job_crons)(todo.id);
+    if (!job)
+        return res.json({ message: "There is no cron job" });
     job.scheduledJob.stop();
     job.jobToMarkAsDone.stop();
     (0, store_1.remove_job_crons)(todo.id);
@@ -36,7 +38,10 @@ app.put("/reminder-update", (req, res) => {
 });
 app.delete("/reminder-deleted", (req, res) => {
     const { todoId } = req.body;
+    // const { todoId } = req.query as { todoId: string };
     const job = (0, store_1.get_job_crons)(todoId);
+    if (!job)
+        return res.json({ message: "There is no cron job" });
     job.scheduledJob.stop();
     job.jobToMarkAsDone.stop();
     (0, store_1.remove_job_crons)(todoId);
