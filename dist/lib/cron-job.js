@@ -14,9 +14,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createCronJobToMarkAsDone = exports.createCronJob = void 0;
 const node_cron_1 = __importDefault(require("node-cron"));
-const nodemailer_1 = require("./nodemailer");
 const client_1 = require("@prisma/client");
 const store_1 = require("./store");
+const courier_1 = require("./courier");
 const client = new client_1.PrismaClient();
 const createScheduleExpression = (date) => {
     const minutes = date.getMinutes();
@@ -63,13 +63,18 @@ const createCronJob = (todo) => {
                 notificationSent: true,
             },
         });
-        const mailOptions = {
-            from: `${process.env.MY_EMAIL}`,
-            to: todo.user.email,
-            subject: `Reminder: [${todo.title}]`,
-            text: `Message: \n Hello, \n\n This is a friendly reminder that you have a task to complete: [${todo.title}]. Please complete this task as soon as possible. \n\n Thank you, \n\n meetly-omega.vercel.app`,
-        };
-        yield nodemailer_1.transporter.sendMail(mailOptions);
+        yield courier_1.courier.send({
+            message: {
+                to: {
+                    email: todo.user.email,
+                },
+                template: "2D62H8J32V4YWWG1SC4DE07ABJ6H",
+                data: {
+                    recipientName: todo.user.name,
+                    todoTitle: todo.title,
+                },
+            },
+        });
     }), {
         timezone: "Europe/Istanbul",
     });
